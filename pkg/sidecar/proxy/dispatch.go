@@ -41,6 +41,9 @@ type contextKey string
 
 const requestStartTimeKey contextKey = "request_start_time"
 
+// kvCacheSourceKey carries the validated source after routing headers are removed.
+const kvCacheSourceKey contextKey = "kv_cache_source"
+
 func openAIAPIAttr(apiType reqcommon.APIType) attribute.KeyValue {
 	return semconv.LLMDOpenAIAPI(apiType.String())
 }
@@ -187,6 +190,7 @@ func (s *Server) disaggregatedPrefillHandler(apiType reqcommon.APIType) http.Han
 			} else {
 				metrics.RecordDisagg(metricsutil.DisaggPathEncodeDecode)
 			}
+			r = r.WithContext(context.WithValue(r.Context(), kvCacheSourceKey, kvCacheSource))
 			s.handleECConnector(w, r, prefillHostPort, allowedEncoders, apiType)
 			return
 		}
