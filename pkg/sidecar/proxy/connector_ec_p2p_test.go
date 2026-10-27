@@ -79,9 +79,10 @@ func TestEPDP2PCacheSource(t *testing.T) {
 				defer proxy.Close()
 
 				source := "10.9.9.9:8000"
-				if scenario == "self-source" {
+				switch scenario {
+				case "self-source":
 					source = prefillHost
-				} else if scenario == "malformed" {
+				case "malformed":
 					source = "not-a-host-port"
 				}
 				body, err := json.Marshal(userMessageRequest(imageURLItem("https://example.com/image.jpg")))
