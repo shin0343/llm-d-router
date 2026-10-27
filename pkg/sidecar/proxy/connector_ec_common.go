@@ -352,10 +352,8 @@ func (s *Server) runPDPipeline(
 
 	if len(prefillEndPoint) > 0 {
 		s.logger.V(logging.DEBUG).Info("using P/D protocol after encoder", "prefiller", prefillEndPoint)
-		// The encoder path does not carry a KV cache source: the P2P prefix pull
-		// is not wired through encoder disaggregation. The empty source skips the
-		// p2p injection regardless of --enable-p2p-pull.
-		s.handlePDConnector(w, pdRequest, prefillEndPoint, "", apiType)
+		kvCacheSource, _ := r.Context().Value(kvCacheSourceKey).(string)
+		s.handlePDConnector(w, pdRequest, prefillEndPoint, kvCacheSource, apiType)
 		return
 	}
 

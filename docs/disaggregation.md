@@ -642,6 +642,11 @@ pod must offload its generated (decode-phase) KV: set `offload_prompt_only:
 false` in its `kv_connector_extra_config` (the default `true` offloads only
 prefill blocks).
 
+With encode/prefill/decode disaggregation, the sidecar preserves the validated
+cache source through the encode stage and includes the P2P pull on the subsequent
+prefill request. The same connector and flag requirements apply, and no pull is
+added when the source is the prefiller itself.
+
 Both prefill and decode pods require the following `--kv-transfer-config`:
 
 ```json
